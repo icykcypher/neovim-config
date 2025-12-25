@@ -36,6 +36,8 @@ return {
                 "gopls",
                 "vtsls",
                 "tailwindcss",
+                "gopls",
+                "yamlls"
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -86,6 +88,21 @@ return {
                         filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "svelte", "heex" },
                     })
                 end,
+                ["yamlls"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.yamlls.setup({
+                    capabilities = capabilities,
+                    settings = {
+                        yaml = {
+                            schemas = {
+                                ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+                                ["kubernetes"] = "/*.yaml",
+                            },
+                        validate = true,
+                         },
+                     },
+                })
+            end
             }
         })
 
@@ -98,13 +115,13 @@ return {
                 end,
             },
             mapping = cmp.mapping.preset.insert({
+                ["<CR>"] = cmp.mapping.confirm({ select = true }),
                 ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                 ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
                 ['<C-y>'] = cmp.mapping.confirm({ select = true }),
                 ["<C-Space>"] = cmp.mapping.complete(),
             }),
             sources = cmp.config.sources({
-                { name = "copilot", group_index = 2 },
                 { name = 'nvim_lsp' },
                 { name = 'luasnip' }, -- For luasnip users.
             }, {
