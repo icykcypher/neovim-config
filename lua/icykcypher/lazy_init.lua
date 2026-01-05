@@ -13,7 +13,16 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     spec = {
-        { import = "icykcypher.lazy" },
+        -- твои плагины
+        { "williamboman/mason.nvim", config = function()
+            require("mason").setup({
+                PATH = "prepend",
+            })
+        end },
+        { "williamboman/mason-lspconfig.nvim", config = function()
+            require("mason-lspconfig").setup()
+        end },
+        { import = "icykcypher.lazy" }, -- остальные плагины из твоей конфигурации
     },
     change_detection = { notify = false },
 })
